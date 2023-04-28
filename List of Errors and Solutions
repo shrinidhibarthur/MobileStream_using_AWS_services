@@ -1,0 +1,52 @@
+here's a summary of the errors:
+
+1. Error: "TypeError: Cannot convert pandas.core.series.Series to pyarrow.lib.Array". 
+   Solution: Convert the Pandas DataFrame to a PyArrow Table using pa.Table.from_pandas() before writing it to a Parquet file.
+   
+2. Error: "TypeError: Cannot convert pyarrow.lib.Schema to pyarrow.lib.Field". 
+   Solution: Define the event properties schema as pa.list_(pa.struct([event_properties_schema])) instead of just pa.struct([event_properties_schema]).
+
+3. Error: "NameError: name 'datetime' is not defined". 
+   Solution: Import the datetime module before using it.
+
+4. Error: "TypeError: write() missing 1 required positional argument: 'data'". 
+   Solution: Use the write() method of the Kinesis client with the correct parameters (stream name and data) to write data to a Kinesis stream.
+
+5. Error: "TypeError: init() got an unexpected keyword argument 'rows'". 
+   Solution: Use pq.write_table() instead of writer.write() to write the PyArrow table to a Parquet file.
+
+6. Error: "TypeError: init() got an unexpected keyword argument 'schema'". 
+   Solution: Use pq.ParquetWriter() instead of pq.ParquetFile() to initialize the Parquet writer with the schema, and pass the writer object to writer.write_table() instead of pq.write_table() to write the PyArrow table to a Parquet file.
+
+7. Error: "KeyError: 'event_properties'". 
+   Solution: Pass the event_properties list to the event_properties field in the PyArrow RecordBatch, instead of wrapping it in another list.
+
+8. Error: "TypeError: 'int' object is not subscriptable". 
+   Solution: Define the event_properties variable as a list of dictionaries, and access its elements using dictionary keys instead of indexing.
+
+9. Error: "TypeError: can only concatenate str (not "int") to str". 
+   Solution: Convert the user_id variable to a string using str(user_id) before passing it to the PyArrow array constructor.
+
+10.Error: "TypeError: init() got an unexpected keyword argument 'use_threads'". 
+   Solution: Set the use_threads parameter of pq.ParquetWriter() to True to enable multi-threaded writing of Parquet files.
+
+11.Error: "Unable to find transformed data in S3 bucket."
+    Solution: Check the S3 bucket name and object key in the Lambda function code and make sure they are correct. Also, ensure that the necessary transformations are applied to the data before it is written to S3.
+
+12.Error: "Unable to import module 'lambda_function': No module named 'pyarrow'."
+    Solution: Include the pyarrow module in the deployment package for your Lambda function. Create a zip file that includes your Lambda function code and any required dependencies, including the pyarrow module. Note down the path to the file.
+
+13.Error: "'Kinesis' object has no attribute 'update_function_code'."
+    Solution: Use the correct client object for Lambda, which is "lambda_client" instead of "kinesis".
+
+14.Error: "NameError: name 'Glue' is not defined."
+    Solution: Import the Glue client from the boto3 library using "boto3.client('glue')" in the Lambda function code.
+
+15.Error: "An error occurred (AccessDeniedException) when calling the CreateJob operation: User: arn:aws:iam::xxxxxxxxxxxx:user/xxxxxx is not authorized to perform: glue:CreateJob."
+    Solution: Check the IAM permissions for the user or role that is attempting to create the Glue job. Make sure that the necessary permissions are granted to the user or role, including "glue:CreateJob" and "s3:GetObject".
+
+16.Error: "An error occurred (AccessDeniedException) when calling the ListBuckets operation: Access Denied."
+    Solution: Check the IAM permissions for the user or role that is attempting to access the S3 bucket. Make sure that the necessary permissions are granted to the user or role, including "s3:ListBucket" and "s3:GetObject".
+
+17.Error: "An error occurred (AccessDeniedException) when calling the CreateDeliveryStream operation: User: arn:aws:iam::xxxxxxxxxxxx:user/xxxxxx is not authorized to perform: firehose:CreateDeliveryStream."
+    Solution: Check the IAM permissions for the user or role that is attempting to create the Kinesis Data Firehose delivery stream. Make sure that the necessary permissions are granted to the user or role, including "firehose:CreateDeliveryStream" and "firehose:PutRecord".
