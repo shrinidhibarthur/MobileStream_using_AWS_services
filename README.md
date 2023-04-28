@@ -6,7 +6,7 @@ Getting Started
 To use the code in this repository, follow the steps below:
 
 1. Clone this repository to your local machine using the following command:
-git clone https://github.com/your-username/data-pipeline-for-mobile-app.git
+git clone https://github.com/shrinidhibarthur/MobileStream_using_AWS_services.git
 
 2. Create an Amazon Kinesis data stream by following the instructions in the AWS documents.
 
